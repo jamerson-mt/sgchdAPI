@@ -1,16 +1,11 @@
 namespace sgchdAPI.Models
 {
-    public class Docente
+    public class Docente(int id, string name, string email)
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
+        public int Id { get; set; } = id;
+        public string Name { get; set; } = name;
+        public string Email { get; set; } = email;
 
-        public Docente(int id, string name, string email) 
-        {
-            Id = id;
-            Name = name;
-            Email = email;
-        }
+        public ICollection<DisciplinaDocente>? DisciplinaDocentes { get; set; }
     }
 }
