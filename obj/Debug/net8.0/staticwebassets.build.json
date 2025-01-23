@@ -1,12 +1,11 @@
 {
   "Version": 1,
-  "Hash": "NNeLy6KBTcYg15iI1SJWI4ZDGtgZ4pLA8Llh0JAOJdQ=",
+  "Hash": "nkmcYVLnmDMNs4H/ql5VKcBnxF9n2qyzTK3lNcWJnY0=",
   "Source": "sgchdAPI",
   "BasePath": "_content/sgchdAPI",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
+  "Assets": []
 }
