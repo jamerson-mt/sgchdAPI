@@ -34,12 +34,20 @@ namespace sgchdAPI.Data
                 .WithMany(d => d.DisciplinaDocentes)
                 .HasForeignKey(dd => dd.DocenteId);
 
-            // Configurações adicionais, se necessário
+            // Configuracoes de DocentesElegiveis
+            modelBuilder.Entity<DocenteElegivel>()
+                .HasKey(de => new { de.DisciplinaId, de.DocenteId });
 
+            modelBuilder.Entity<DocenteElegivel>()
+                .HasOne(de => de.Disciplina)
+                .WithMany(d => d.DocentesElegiveis)
+                .HasForeignKey(de => de.DisciplinaId);
 
+            modelBuilder.Entity<DocenteElegivel>()
+                .HasOne(de => de.Docente)
+                .WithMany(d => d.DisciplinasElegiveis)
+                .HasForeignKey(de => de.DocenteId);
 
         }
-
-
     }
 }

@@ -7,5 +7,6 @@ namespace sgchdAPI.Models
         public string Email { get; set; } = email;
 
         public ICollection<DisciplinaDocente>? DisciplinaDocentes { get; set; }
+        public ICollection<DocenteElegivel> DisciplinasElegiveis { get; set; } 
     }
 }

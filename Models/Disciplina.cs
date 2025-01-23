@@ -8,5 +8,6 @@ namespace sgchdAPI.Models
         public int CargaHoraria { get; set; } = cargaHoraria;
 
         public ICollection<DisciplinaDocente>? DisciplinaDocentes { get; set; }
+        public ICollection<DocenteElegivel> DocentesElegiveis { get; set; } //
     }
 }
