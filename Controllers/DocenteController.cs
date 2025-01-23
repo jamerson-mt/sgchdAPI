@@ -6,7 +6,7 @@ using System.Linq;
 namespace sgchdAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class DocenteController(ApplicationDbContext context) : ControllerBase
     {
         private readonly ApplicationDbContext _context = context;
