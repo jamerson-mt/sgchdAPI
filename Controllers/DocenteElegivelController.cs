@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using sgchdAPI.Data;
+using sgchdAPI.Models;
 
 namespace sgchdAPI.Controllers
 {
@@ -20,10 +18,10 @@ namespace sgchdAPI.Controllers
 		}
 
 		[HttpGet("{docenteId}")] // GET /api/docenteelegivel/1
-		public IActionResult GetByDoscente(int doscenteId)
+		public IActionResult GetByDocente(int docenteId)
 		{
 			var docentesElegiveis = _context.DocentesElegiveis
-				.Where(d => d.DoscenteId == doscenteId)
+				.Where(d => d.DocenteId == docenteId)
 				.ToList();
 			return Ok(docentesElegiveis);
 		}

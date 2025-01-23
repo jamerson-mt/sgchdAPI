@@ -11,11 +11,13 @@ namespace sgchdAPI.Data
             // Chame o método de seed aqui
             DisciplinaSeed.Seed(this);
 			DocenteSeed.Seed(this);
+			DocenteElegivelSeed.Seed(this);
         }
 
         public DbSet<Docente> Docentes { get; set; }
         public DbSet<Disciplina> Disciplinas { get; set; }
         public DbSet<DisciplinaDocente> DisciplinaDocentes { get; set; }
+		public DbSet<DocenteElegivel> DocentesElegiveis { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
