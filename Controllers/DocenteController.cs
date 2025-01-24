@@ -28,5 +28,44 @@ namespace sgchdAPI.Controllers
 			}
 			return Ok(docente);
 		}
+
+		[HttpPost]
+		public IActionResult Create(Docente docente)
+		{
+			_context.Docentes.Add(docente);
+			_context.SaveChanges();
+			return CreatedAtAction(nameof(GetById), new { id = docente.Id }, docente);
+		}
+
+		[HttpPut("{id}")]
+		public IActionResult Update(int id, Docente docente)
+		{
+			var docenteExistente = _context.Docentes.FirstOrDefault(d => d.Id == id);
+			if (docenteExistente == null)
+			{
+				return NotFound("Docente não encontrado");
+			}
+
+			docenteExistente.Name = docente.Name;
+			docenteExistente.Email = docente.Email;
+
+			_context.Docentes.Update(docenteExistente);
+			_context.SaveChanges();
+			return NoContent();
+		}
+
+		[HttpDelete("{id}")]
+		public IActionResult Delete(int id)
+		{
+			var docente = _context.Docentes.FirstOrDefault(d => d.Id == id);
+			if (docente == null)
+			{
+				return NotFound("Docente não encontrado");
+			}
+
+			_context.Docentes.Remove(docente);
+			_context.SaveChanges();
+			return NoContent();
+		}
 	}
 }
