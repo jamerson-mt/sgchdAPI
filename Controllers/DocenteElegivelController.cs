@@ -4,10 +4,10 @@ using sgchdAPI.Models;
 
 namespace sgchdAPI.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class DocenteElegivelController(ApplicationDbContext context) : ControllerBase
-    {
+	[ApiController]
+	[Route("api/[controller]")]
+	public class DocenteElegivelController(ApplicationDbContext context) : ControllerBase
+	{
 		private readonly ApplicationDbContext _context = context;
 
 		[HttpGet]
@@ -20,8 +20,8 @@ namespace sgchdAPI.Controllers
 		[HttpGet("{docenteId}")] // GET /api/docenteelegivel/1
 		public IActionResult GetByDocente(int docenteId)
 		{
-			var docentesElegiveis = _context.DocentesElegiveis
-				.Where(d => d.DocenteId == docenteId)
+			var docentesElegiveis = _context
+				.DocentesElegiveis.Where(d => d.DocenteId == docenteId)
 				.ToList();
 			return Ok(docentesElegiveis);
 		}
@@ -29,11 +29,10 @@ namespace sgchdAPI.Controllers
 		[HttpGet("disciplina/{disciplinaId}")] // Rota para buscar docentes elegíveis passando o id da disciplina
 		public IActionResult GetByDisciplina(int disciplinaId)
 		{
-			var docentesElegiveis = _context.DocentesElegiveis
-				.Where(d => d.DisciplinaId == disciplinaId)
+			var docentesElegiveis = _context
+				.DocentesElegiveis.Where(d => d.DisciplinaId == disciplinaId)
 				.ToList();
 			return Ok(docentesElegiveis);
 		}
-
-    }
+	}
 }
