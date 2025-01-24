@@ -34,5 +34,39 @@ namespace sgchdAPI.Controllers
 				.ToList();
 			return Ok(docentesElegiveis);
 		}
+
+		[HttpPost]
+		public IActionResult Create(int docenteId, int disciplinaId)
+		{
+			var docenteElegivel = new DocenteElegivel
+			{
+				DocenteId = docenteId,
+				DisciplinaId = disciplinaId,
+			};
+
+			_context.DocentesElegiveis.Add(docenteElegivel);
+			_context.SaveChanges();
+			return CreatedAtAction(
+				nameof(GetByDocente),
+				new { docenteId = docenteElegivel.DocenteId },
+				docenteElegivel
+			);
+		}
+
+		[HttpDelete("{docenteId}/{disciplinaId}")]
+		public IActionResult Delete(int docenteId, int disciplinaId)
+		{
+			var docenteElegivel = _context.DocentesElegiveis.FirstOrDefault(de =>
+				de.DocenteId == docenteId && de.DisciplinaId == disciplinaId
+			);
+			if (docenteElegivel == null)
+			{
+				return NotFound("Docente elegível não encontrado");
+			}
+
+			_context.DocentesElegiveis.Remove(docenteElegivel);
+			_context.SaveChanges();
+			return NoContent();
+		}
 	}
 }
