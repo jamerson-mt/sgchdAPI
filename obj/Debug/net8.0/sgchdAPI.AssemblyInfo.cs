@@ -13,7 +13,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("sgchdAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3b7cdd60f048aca6e8487032ee04a3fe1931b33c")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a09a2c2468497bb394ceef1621b3af98279b7f75")]
+>>>>>>> parent of 3b7cdd6 (merge need)
 [assembly: System.Reflection.AssemblyProductAttribute("sgchdAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("sgchdAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
