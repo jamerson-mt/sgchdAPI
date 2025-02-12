@@ -1,0 +1,6 @@
+@sgchdAPI_HostAddress = http://localhost:5117
+
+GET {{sgchdAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
