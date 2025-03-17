@@ -1,10 +1,23 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace sgchdAPI.Models
 {
-	public class Docente(int id, string name, string email)
+	[Index(nameof(Email), IsUnique = true)]
+	public class Docente
 	{
-		public int Id { get; set; } = id;
-		public string Name { get; set; } = name;
-		public string Email { get; set; } = email;
+		public Docente(int id, string name, string email)
+		{
+			Id = id;
+			Name = name;
+			Email = email;
+		}
+
+		public int Id { get; set; }
+		public string Name { get; set; }
+
+		// coloque o email como unico no banco de dados
+		public string Email { get; set; }
+
 
 		public ICollection<DisciplinaDocente>? DisciplinaDocentes { get; set; }
 		public ICollection<DocenteElegivel>? DisciplinasElegiveis { get; set; }

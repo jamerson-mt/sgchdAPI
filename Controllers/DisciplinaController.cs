@@ -31,6 +31,17 @@ namespace sgchdAPI.Controllers
 		[HttpPost]
 		public IActionResult Create(Disciplina disciplina)
 		{
+			// verifique se existe disciplina com o nome informado
+
+			var disciplinaExistente = _context.Disciplinas.FirstOrDefault(d =>
+				d.Name == disciplina.Name
+			);
+
+			if (disciplinaExistente != null)
+			{
+				return Conflict("Já existe uma disciplina com esse nome");
+			}
+
 			_context.Disciplinas.Add(disciplina);
 			_context.SaveChanges();
 			return CreatedAtAction(nameof(GetById), new { id = disciplina.Id }, disciplina);
