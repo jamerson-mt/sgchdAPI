@@ -29,6 +29,17 @@ namespace sgchdAPI.Controllers
 			return Ok(atividade);
 		}
 
+		[HttpGet("docente/{docenteId}")]
+		public IActionResult GetByDocenteId(int docenteId)
+		{
+			var atividades = _context.Atividades.Where(a => a.DocenteId == docenteId).ToList();
+			if (atividades == null)
+			{
+				return NotFound();
+			}
+			return Ok(atividades);
+		}
+
 		[HttpPost]
 		public IActionResult Create(Atividade atividade)
 		{
@@ -55,7 +66,6 @@ namespace sgchdAPI.Controllers
 
 			_context.SaveChanges();
 			return NoContent();
-
 		}
 
 		[HttpDelete("{id}")]
