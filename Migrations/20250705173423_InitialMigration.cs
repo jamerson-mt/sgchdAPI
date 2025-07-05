@@ -1,12 +1,13 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace sgchdAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class ModifyAbonamentoInDateTimeAndUrlPdf : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,9 +16,9 @@ namespace sgchdAPI.Migrations
                 name: "Cursos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -28,10 +29,10 @@ namespace sgchdAPI.Migrations
                 name: "Docentes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Email = table.Column<string>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -42,12 +43,12 @@ namespace sgchdAPI.Migrations
                 name: "Disciplinas",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    CursoId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Periodo = table.Column<int>(type: "INTEGER", nullable: false),
-                    CargaHoraria = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    CursoId = table.Column<int>(type: "integer", nullable: false),
+                    Periodo = table.Column<int>(type: "integer", nullable: false),
+                    CargaHoraria = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,14 +65,14 @@ namespace sgchdAPI.Migrations
                 name: "Abonamentos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    DocenteId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Titulo = table.Column<string>(type: "TEXT", nullable: false),
-                    Descricao = table.Column<string>(type: "TEXT", nullable: true),
-                    Duracao = table.Column<int>(type: "INTEGER", nullable: false),
-                    UrlPdf = table.Column<string>(type: "TEXT", nullable: false),
-                    DataInicio = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DocenteId = table.Column<int>(type: "integer", nullable: false),
+                    Titulo = table.Column<string>(type: "text", nullable: false),
+                    Descricao = table.Column<string>(type: "text", nullable: true),
+                    Duracao = table.Column<int>(type: "integer", nullable: false),
+                    UrlPdf = table.Column<string>(type: "text", nullable: true),
+                    DataInicio = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -85,11 +86,34 @@ namespace sgchdAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Atividades",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DocenteId = table.Column<int>(type: "integer", nullable: false),
+                    Titulo = table.Column<string>(type: "text", nullable: false),
+                    Descricao = table.Column<string>(type: "text", nullable: true),
+                    Duracao = table.Column<int>(type: "integer", nullable: false),
+                    Tipo = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Atividades", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Atividades_Docentes_DocenteId",
+                        column: x => x.DocenteId,
+                        principalTable: "Docentes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DisciplinaDocentes",
                 columns: table => new
                 {
-                    DisciplinaId = table.Column<int>(type: "INTEGER", nullable: false),
-                    DocenteId = table.Column<int>(type: "INTEGER", nullable: false)
+                    DisciplinaId = table.Column<int>(type: "integer", nullable: false),
+                    DocenteId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -112,8 +136,8 @@ namespace sgchdAPI.Migrations
                 name: "DocentesElegiveis",
                 columns: table => new
                 {
-                    DisciplinaId = table.Column<int>(type: "INTEGER", nullable: false),
-                    DocenteId = table.Column<int>(type: "INTEGER", nullable: false)
+                    DisciplinaId = table.Column<int>(type: "integer", nullable: false),
+                    DocenteId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -138,6 +162,11 @@ namespace sgchdAPI.Migrations
                 column: "DocenteId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Atividades_DocenteId",
+                table: "Atividades",
+                column: "DocenteId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DisciplinaDocentes_DocenteId",
                 table: "DisciplinaDocentes",
                 column: "DocenteId");
@@ -146,6 +175,12 @@ namespace sgchdAPI.Migrations
                 name: "IX_Disciplinas_CursoId",
                 table: "Disciplinas",
                 column: "CursoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Docentes_Email",
+                table: "Docentes",
+                column: "Email",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_DocentesElegiveis_DocenteId",
@@ -158,6 +193,9 @@ namespace sgchdAPI.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Abonamentos");
+
+            migrationBuilder.DropTable(
+                name: "Atividades");
 
             migrationBuilder.DropTable(
                 name: "DisciplinaDocentes");

@@ -9,7 +9,7 @@ namespace sgchdAPI.Data
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
 			: base(options)
 		{
-			// // Chame o método de seed aqui
+			// Chame o método de seed aqui
 			CursoSeed.Seed(this);
 			DisciplinaSeed.Seed(this);
 			DocenteSeed.Seed(this);

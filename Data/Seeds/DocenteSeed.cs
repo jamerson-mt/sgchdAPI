@@ -9,9 +9,9 @@ namespace sgchdAPI.Data.Seeds
 			if (!context.Docentes.Any())
 			{
 				context.Docentes.AddRange(
-					new Docente(1, "Jose Jamerson", "jjamersonmt@gmail.com"),
-					new Docente(2, "Maria Joana", "mariajoana@gmail.com"),
-					new Docente(3, "Joao Pedro", "joaopedro@gmail.com")
+					new Docente(0, "Jose Jamerson", "jjamersonmt@gmail.com"),
+					new Docente(0, "Maria Joana", "mariajoana@gmail.com"),
+					new Docente(0, "Joao Pedro", "joaopedro@gmail.com")
 				);
 				context.SaveChanges();
 			}
