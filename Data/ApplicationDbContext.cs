@@ -14,7 +14,7 @@ namespace sgchdAPI.Data
 			DisciplinaSeed.Seed(this);
 			DocenteSeed.Seed(this);
 			DocenteElegivelSeed.Seed(this);
-			AbonamentoSeed.Seed(this);
+			// AbonamentoSeed.Seed(this);
 		}
 
 		public DbSet<Curso> Cursos { get; set; }

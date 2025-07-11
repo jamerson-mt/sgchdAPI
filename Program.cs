@@ -38,6 +38,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Configuração para servir arquivos estáticos
+app.UseStaticFiles(); //
+
 // Aplicar a política de CORS
 app.UseCors("AllowAll");
 
