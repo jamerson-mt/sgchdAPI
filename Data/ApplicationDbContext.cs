@@ -1,20 +1,48 @@
+using System.Linq;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using sgchdAPI.Data.Seeds;
 using sgchdAPI.Models;
 
 namespace sgchdAPI.Data
 {
-	public class ApplicationDbContext : DbContext
+	public class ApplicationDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
 	{
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-			: base(options)
+			: base(options) { }
+
+		// Método dedicado para executar os seeds
+		// como executar os seeds
+		// https://docs.microsoft.com/pt-br/ef/core/managing-schemas/migrations/seeding
+
+
+		public void SeedDatabase()
 		{
-			// Chame o método de seed aqui
-			CursoSeed.Seed(this);
-			DisciplinaSeed.Seed(this);
-			DocenteSeed.Seed(this);
-			DocenteElegivelSeed.Seed(this);
-			// AbonamentoSeed.Seed(this);
+			if (!Cursos.Any())
+			{
+				CursoSeed.Seed(this);
+			}
+
+			if (!Disciplinas.Any())
+			{
+				DisciplinaSeed.Seed(this);
+			}
+
+			if (!Docentes.Any())
+			{
+				DocenteSeed.Seed(this);
+			}
+
+			if (!DocentesElegiveis.Any())
+			{
+				DocenteElegivelSeed.Seed(this);
+			}
+
+			//fazer o seed de roles
+
+			// Adicione verificações semelhantes para outros seeds, se necessário
+			// if (!Abonamentos.Any()) { AbonamentoSeed.Seed(this); }
 		}
 
 		public DbSet<Curso> Cursos { get; set; }
@@ -28,6 +56,54 @@ namespace sgchdAPI.Data
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
+
+			// Configurações adicionais para Identity
+			modelBuilder.Entity<IdentityUser>(entity =>
+			{
+				entity.ToTable("Usuarios");
+				entity.HasKey(u => u.Id);
+			});
+
+			modelBuilder.Entity<IdentityRole>(entity =>
+			{
+				entity.ToTable("Roles");
+				entity.HasKey(r => r.Id);
+			});
+
+			modelBuilder.Entity<IdentityUserRole<string>>(entity =>
+			{
+				entity.ToTable("UsuarioRoles");
+				entity.HasKey(ur => new { ur.UserId, ur.RoleId });
+			});
+
+			modelBuilder.Entity<IdentityUserClaim<string>>(entity =>
+			{
+				entity.ToTable("UsuarioClaims");
+				entity.HasKey(uc => uc.Id);
+			});
+
+			modelBuilder.Entity<IdentityUserLogin<string>>(entity =>
+			{
+				entity.ToTable("UsuarioLogins");
+				entity.HasKey(ul => new { ul.LoginProvider, ul.ProviderKey });
+			});
+
+			modelBuilder.Entity<IdentityRoleClaim<string>>(entity =>
+			{
+				entity.ToTable("RoleClaims");
+				entity.HasKey(rc => rc.Id);
+			});
+
+			modelBuilder.Entity<IdentityUserToken<string>>(entity =>
+			{
+				entity.ToTable("UsuarioTokens");
+				entity.HasKey(ut => new
+				{
+					ut.UserId,
+					ut.LoginProvider,
+					ut.Name,
+				});
+			});
 
 			modelBuilder.Entity<Curso>(entity =>
 			{

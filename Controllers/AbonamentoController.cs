@@ -1,11 +1,12 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using sgchdAPI.Data;
-using sgchdAPI.Data.Seeds;
 using sgchdAPI.Models;
 
 namespace sgchdAPI.Controllers
 {
+	[Authorize(Roles = "ADMIN")] //
 	[ApiController]
 	[Route("api/[controller]")]
 	public class AbonamentoController : ControllerBase
