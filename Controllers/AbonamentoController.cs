@@ -31,7 +31,7 @@ namespace sgchdAPI.Controllers
 			return Ok(_context.Abonamentos);
 		}
 
-		[HttpGet("{id}")]
+		[HttpGet("{id:int}")]
 		public IActionResult GetById(int id)
 		{
 			var abonamento = _context.Abonamentos.Find(id);
@@ -44,7 +44,7 @@ namespace sgchdAPI.Controllers
 			return Ok(abonamento);
 		}
 
-		[HttpGet("{docenteId}")]
+		[HttpGet("docente/{docenteId:int}")]
 		public IActionResult GetByDocenteId(int docenteId)
 		{
 			var abonamento = _context.Abonamentos.ToList().Where(a => a.DocenteId == docenteId);
@@ -67,6 +67,28 @@ namespace sgchdAPI.Controllers
 			[FromForm] IFormFile file
 		)
 		{
+			// Validação dos campos obrigatórios
+			if (docenteId <= 0)
+			{
+				return BadRequest("O campo 'docenteId' é obrigatório e deve ser maior que zero.");
+			}
+			if (string.IsNullOrEmpty(titulo))
+			{
+				return BadRequest("O campo 'titulo' é obrigatório.");
+			}
+			if (string.IsNullOrEmpty(descricao))
+			{
+				return BadRequest("O campo 'descricao' é obrigatório.");
+			}
+			if (duracao <= 0)
+			{
+				return BadRequest("O campo 'duracao' é obrigatório e deve ser maior que zero.");
+			}
+			if (dataInicio == default)
+			{
+				return BadRequest("O campo 'dataInicio' é obrigatório.");
+			}
+
 			// Converter dataInicio para UTC
 			dataInicio = DateTime.SpecifyKind(dataInicio, DateTimeKind.Utc);
 
@@ -122,65 +144,35 @@ namespace sgchdAPI.Controllers
 		[HttpPut("{id}")]
 		public IActionResult Update(
 			int id,
-			[FromForm] Abonamento abonamento,
-			[FromForm] IFormFile file
+			[FromForm] int? docenteId,
+			[FromForm] string titulo,
+			[FromForm] string descricao,
+			[FromForm] int? duracao
 		)
 		{
 			var existingAbonamento = _context.Abonamentos.Find(id);
 			if (existingAbonamento == null)
 			{
-				return NotFound("Esse abonamento não existe");
+				return NotFound("Esse abonamento não existe.");
 			}
 
-			if (file != null)
+			// Atualizar somente os valores fornecidos
+			if (docenteId.HasValue)
 			{
-				// validação de tamanho (10MB)
-				if (file.Length > 10485760)
-				{
-					return BadRequest("O arquivo deve ter no máximo 10MB");
-				}
-
-				// Gerar um nome único para o arquivo caso já exista
-				var fileName = Path.GetFileName(file.FileName);
-				var filePath = Path.Combine(_path, fileName);
-				if (System.IO.File.Exists(filePath))
-				{
-					var uniqueId = Guid.NewGuid().ToString();
-					fileName =
-						$"{Path.GetFileNameWithoutExtension(fileName)}_{uniqueId}{Path.GetExtension(fileName)}";
-					filePath = Path.Combine(_path, fileName);
-				}
-
-				// salvar novo PDF
-				using (var stream = new FileStream(filePath, FileMode.Create))
-				{
-					file.CopyTo(stream);
-				}
-
-				// deletar o arquivo antigo
-				var oldFilePath = Path.Combine(
-					Directory.GetCurrentDirectory(),
-					"wwwroot",
-					existingAbonamento.UrlPdf
-				);
-				if (System.IO.File.Exists(oldFilePath))
-				{
-					System.IO.File.Delete(oldFilePath);
-				}
-
-				// salvar o caminho relativo do novo arquivo
-				var relativePath = Path.Combine("upload", fileName);
-				existingAbonamento.UrlPdf = relativePath;
+				existingAbonamento.DocenteId = docenteId.Value;
 			}
-
-			existingAbonamento.DocenteId = abonamento.DocenteId;
-			existingAbonamento.Titulo = abonamento.Titulo;
-			existingAbonamento.Descricao = abonamento.Descricao;
-			existingAbonamento.Duracao = abonamento.Duracao;
-			existingAbonamento.DataInicio = DateTime.SpecifyKind(
-				abonamento.DataInicio,
-				DateTimeKind.Utc
-			);
+			if (!string.IsNullOrEmpty(titulo))
+			{
+				existingAbonamento.Titulo = titulo;
+			}
+			if (!string.IsNullOrEmpty(descricao))
+			{
+				existingAbonamento.Descricao = descricao;
+			}
+			if (duracao.HasValue)
+			{
+				existingAbonamento.Duracao = duracao.Value;
+			}
 
 			_context.SaveChanges();
 
@@ -201,7 +193,7 @@ namespace sgchdAPI.Controllers
 			var filePath = Path.Combine(
 				Directory.GetCurrentDirectory(),
 				"wwwroot",
-				abonamento.UrlPdf
+				abonamento.UrlPdf ?? string.Empty
 			);
 			if (System.IO.File.Exists(filePath))
 			{
