@@ -18,7 +18,6 @@ namespace sgchdAPI.Models
 		// coloque o email como unico no banco de dados
 		public string Email { get; set; }
 
-
 		public ICollection<DisciplinaDocente>? DisciplinaDocentes { get; set; }
 		public ICollection<DocenteElegivel>? DisciplinasElegiveis { get; set; }
 		public ICollection<Abonamento>? Abonamentos { get; set; }

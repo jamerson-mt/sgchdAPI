@@ -7,9 +7,9 @@ using sgchdAPI.Models;
 
 namespace sgchdAPI.Data
 {
-	public class ApplicationDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
+	public class ApplicationDbContext : IdentityDbContext<IdentityUser, IdentityRole, string> // Usando Identity para autenticação e autorização
 	{
-		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) // Injetando as opções de configuração do DbContext
 			: base(options) { }
 
 		// Método dedicado para executar os seeds
@@ -60,31 +60,31 @@ namespace sgchdAPI.Data
 			// Configurações adicionais para Identity
 			modelBuilder.Entity<IdentityUser>(entity =>
 			{
-				entity.ToTable("Usuarios");
+				entity.ToTable("Usuarios"); // Nome da tabela para usuários
 				entity.HasKey(u => u.Id);
 			});
 
 			modelBuilder.Entity<IdentityRole>(entity =>
 			{
-				entity.ToTable("Roles");
+				entity.ToTable("Roles"); // Nome da tabela para roles
 				entity.HasKey(r => r.Id);
 			});
 
 			modelBuilder.Entity<IdentityUserRole<string>>(entity =>
 			{
-				entity.ToTable("UsuarioRoles");
+				entity.ToTable("UsuarioRoles"); // Nome da tabela para associação entre usuários e roles
 				entity.HasKey(ur => new { ur.UserId, ur.RoleId });
 			});
 
 			modelBuilder.Entity<IdentityUserClaim<string>>(entity =>
 			{
-				entity.ToTable("UsuarioClaims");
+				entity.ToTable("UsuarioClaims"); // Nome da tabela para claims de usuários
 				entity.HasKey(uc => uc.Id);
 			});
 
 			modelBuilder.Entity<IdentityUserLogin<string>>(entity =>
 			{
-				entity.ToTable("UsuarioLogins");
+				entity.ToTable("UsuarioLogins"); // Nome da tabela para logins de usuários
 				entity.HasKey(ul => new { ul.LoginProvider, ul.ProviderKey });
 			});
 
@@ -96,7 +96,7 @@ namespace sgchdAPI.Data
 
 			modelBuilder.Entity<IdentityUserToken<string>>(entity =>
 			{
-				entity.ToTable("UsuarioTokens");
+				entity.ToTable("UsuarioTokens"); // Nome da tabela para tokens de usuários
 				entity.HasKey(ut => new
 				{
 					ut.UserId,

@@ -249,7 +249,7 @@ namespace sgchdAPI.Migrations
 
                     b.HasIndex("DocenteId");
 
-                    b.ToTable("Abonamentos");
+                    b.ToTable("Abonamentos", (string)null);
                 });
 
             modelBuilder.Entity("sgchdAPI.Models.Atividade", b =>
@@ -280,7 +280,7 @@ namespace sgchdAPI.Migrations
 
                     b.HasIndex("DocenteId");
 
-                    b.ToTable("Atividades");
+                    b.ToTable("Atividades", (string)null);
                 });
 
             modelBuilder.Entity("sgchdAPI.Models.Curso", b =>
@@ -325,7 +325,7 @@ namespace sgchdAPI.Migrations
 
                     b.HasIndex("CursoId");
 
-                    b.ToTable("Disciplinas");
+                    b.ToTable("Disciplinas", (string)null);
                 });
 
             modelBuilder.Entity("sgchdAPI.Models.DisciplinaDocente", b =>
@@ -340,7 +340,7 @@ namespace sgchdAPI.Migrations
 
                     b.HasIndex("DocenteId");
 
-                    b.ToTable("DisciplinaDocentes");
+                    b.ToTable("DisciplinaDocentes", (string)null);
                 });
 
             modelBuilder.Entity("sgchdAPI.Models.Docente", b =>
@@ -364,7 +364,7 @@ namespace sgchdAPI.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Docentes");
+                    b.ToTable("Docentes", (string)null);
                 });
 
             modelBuilder.Entity("sgchdAPI.Models.DocenteElegivel", b =>
@@ -379,7 +379,7 @@ namespace sgchdAPI.Migrations
 
                     b.HasIndex("DocenteId");
 
-                    b.ToTable("DocentesElegiveis");
+                    b.ToTable("DocentesElegiveis", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

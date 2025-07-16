@@ -6,7 +6,6 @@ using sgchdAPI.Models;
 
 namespace sgchdAPI.Controllers
 {
-	[Authorize(Roles = "ADMIN")] //
 	[ApiController]
 	[Route("api/[controller]")]
 	public class AbonamentoController : ControllerBase
@@ -29,6 +28,10 @@ namespace sgchdAPI.Controllers
 		[HttpGet]
 		public IActionResult Get()
 		{
+			// retorne a role do usuario
+			// var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
+			// retorne a role somente
+
 			return Ok(_context.Abonamentos);
 		}
 

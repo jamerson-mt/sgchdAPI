@@ -1,6 +1,6 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using sgchdAPI.Data;
 using sgchdAPI.Data.Seeds;
 
@@ -15,9 +15,21 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 builder
-	.Services.AddIdentity<IdentityUser, IdentityRole>()
+	.Services.AddIdentity<IdentityUser, IdentityRole>() // Configuração do Identity
 	.AddEntityFrameworkStores<ApplicationDbContext>()
 	.AddDefaultTokenProviders();
+
+builder
+	.Services.AddAuthentication(options =>
+	{
+		options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme; // Esquema de autenticação padrão, que é o esquema de cookie que faz a autenticação baseada em cookies
+		options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme; // Esquema de desafio padrão, que é o esquema de cookie que faz a autenticação baseada em cookies
+	})
+	.AddCookie(options =>
+	{
+		options.LoginPath = "/api/account/try-login"; // Rota para a página de login
+		options.AccessDeniedPath = "/api/account/access-denied"; // Rota para acesso negado
+	});
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -26,12 +38,13 @@ builder.Services.Configure<IdentityOptions>(options =>
 	options.Password.RequireNonAlphanumeric = false;
 	options.Password.RequireUppercase = true;
 	options.Password.RequireLowercase = true;
+	options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role; // Mapeia a claim de role corretamente
 });
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-	options.LoginPath = "/Account/Login"; // Rota para a página de login
-	options.AccessDeniedPath = "/Account/AccessDenied"; // Rota para acesso negado
+	options.LoginPath = "/api/account/try-login"; // Rota para a página de login
+	options.AccessDeniedPath = "/api/account/access-denied"; // Rota para acesso negado,
 });
 
 // Configuração do CORS
@@ -49,6 +62,9 @@ builder.Services.AddCors(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Removed AddIdentityApiEndpoints as it is not a valid method
+// Identity services are already configured above
 
 var app = builder.Build();
 
@@ -82,13 +98,30 @@ using (var scope = app.Services.CreateScope())
 		var context = services.GetRequiredService<ApplicationDbContext>();
 		context.Database.Migrate(); // Aplica as migrações pendentes
 		context.SeedDatabase(); // Executa o seeding
-
-		var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-		await RolesSeed.SeedRoles(roleManager);
 	}
 	catch (Exception ex)
 	{
 		Console.WriteLine($"Erro ao executar o seeding: {ex.Message}");
+	}
+}
+
+using (var scope = app.Services.CreateScope()) //
+{
+	var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+	await SeedRolesAsync(roleManager);
+}
+
+// Define the SeedRolesAsync method
+
+async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager) //
+{
+	var roles = new[] { "Admin", "User" };
+	foreach (var role in roles)
+	{
+		if (!await roleManager.RoleExistsAsync(role))
+		{
+			await roleManager.CreateAsync(new IdentityRole(role));
+		}
 	}
 }
 
