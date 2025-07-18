@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using sgchdAPI.Data;
 using sgchdAPI.Models;
 
 namespace sgchdAPI.Controllers
 {
+	[Authorize]
 	[ApiController]
 	[Route("api/[controller]")]
 	public class DocenteElegivelController(ApplicationDbContext context) : ControllerBase

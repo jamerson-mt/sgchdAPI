@@ -27,7 +27,7 @@ builder
 	})
 	.AddCookie(options =>
 	{
-		options.LoginPath = "/api/account/try-login"; // Rota para a página de login
+		options.LoginPath = "/auth/login"; // Rota para a página de login
 		options.AccessDeniedPath = "/api/account/access-denied"; // Rota para acesso negado
 	});
 
@@ -51,10 +51,14 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddCors(options =>
 {
 	options.AddPolicy(
-		"AllowAll",
+		"AllowSpecificOrigin",
 		builder =>
 		{
-			builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+			builder
+				.WithOrigins("http://localhost:5173") // Substitua pelo domínio da sua aplicação frontend
+				.AllowAnyHeader()
+				.AllowAnyMethod()
+				.AllowCredentials(); // Permite envio de cookies e credenciais
 		}
 	);
 });
@@ -81,7 +85,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles(); //
 
 // Aplicar a política de CORS
-app.UseCors("AllowAll");
+app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthentication();
 app.UseAuthorization();

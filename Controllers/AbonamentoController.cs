@@ -6,6 +6,7 @@ using sgchdAPI.Models;
 
 namespace sgchdAPI.Controllers
 {
+	[Authorize]
 	[ApiController]
 	[Route("api/[controller]")]
 	public class AbonamentoController : ControllerBase

@@ -100,6 +100,19 @@ namespace sgchdAPI.Controllers.Auth
 			return Forbid(new { message = "Usuário não autenticado." });
 		}
 
+		[Authorize]
+		[HttpGet("test-auth")]
+		public IActionResult TestAuth()
+		{
+			return Ok(new { message = "Usuário autenticado com sucesso!" });
+		}
+
+		[HttpGet("redirect-login")]
+		public IActionResult RedirectLogin()
+		{
+			return Redirect("/auth/login");
+		}
+
 		private IActionResult Forbid(object value)
 		{
 			return new ObjectResult(value) { StatusCode = StatusCodes.Status403Forbidden };

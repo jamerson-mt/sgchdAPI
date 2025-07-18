@@ -1,10 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using sgchdAPI.Data;
 using sgchdAPI.Models;
 
 namespace sgchdAPI.Controllers
 {
+	[Authorize]
 	[ApiController]
 	[Route("api/[controller]")]
 	public class AtividadeController(ApplicationDbContext context) : ControllerBase
