@@ -15,7 +15,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 builder
-	.Services.AddIdentity<IdentityUser, IdentityRole>() // Configuração do Identity
+	.Services.AddIdentity<IdentityUser, IdentityRole>() // Configuração do Identity com IdentityUser e IdentityRole
 	.AddEntityFrameworkStores<ApplicationDbContext>()
 	.AddDefaultTokenProviders();
 
@@ -45,6 +45,11 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
 	options.LoginPath = "/api/account/try-login"; // Rota para a página de login
 	options.AccessDeniedPath = "/api/account/access-denied"; // Rota para acesso negado,
+});
+
+builder.Services.AddAuthorization(options =>
+{
+	options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin")); //
 });
 
 // Configuração do CORS
@@ -109,10 +114,11 @@ using (var scope = app.Services.CreateScope())
 	}
 }
 
+// Seed roles into the database
 using (var scope = app.Services.CreateScope()) //
 {
-	var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-	await SeedRolesAsync(roleManager);
+	var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>(); //
+	await SeedRolesAsync(roleManager); //
 }
 
 // Define the SeedRolesAsync method

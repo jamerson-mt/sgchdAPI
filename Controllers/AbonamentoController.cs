@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using sgchdAPI.Data;
@@ -6,7 +5,7 @@ using sgchdAPI.Models;
 
 namespace sgchdAPI.Controllers
 {
-	[Authorize]
+	[Authorize(Roles = "Admin")] // qual namespace para importar para isso:
 	[ApiController]
 	[Route("api/[controller]")]
 	public class AbonamentoController : ControllerBase
