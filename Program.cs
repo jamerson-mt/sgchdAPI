@@ -9,9 +9,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+var password = Environment.GetEnvironmentVariable("DB_PASSWORD"); // Carregar a senha da variável de ambiente
+var connectionString =
+	builder
+		.Configuration.GetConnectionString("DefaultConnection") // Ensure proper formatting
+		?.Replace("{ProdPasswordPlaceholder}", password)
+	?? throw new InvalidOperationException("Connection string is null.");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-	options.UseNpgsql("Host=localhost;Database=sgchd;Username=postgres;Password=21301");
+	options.UseNpgsql(connectionString);
 });
 
 builder

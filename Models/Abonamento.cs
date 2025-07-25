@@ -15,7 +15,6 @@ namespace sgchdAPI.Models
 
 		// Construtor com parâmetros
 		public Abonamento(
-
 			int docenteId,
 			string titulo,
 			string descricao,
@@ -23,7 +22,6 @@ namespace sgchdAPI.Models
 			string urlPdf
 		)
 		{
-
 			Titulo = titulo;
 			Descricao = descricao;
 			Duracao = duracao;
