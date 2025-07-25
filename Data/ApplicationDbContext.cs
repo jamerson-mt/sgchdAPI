@@ -45,7 +45,7 @@ namespace sgchdAPI.Data
 			// if (!Abonamentos.Any()) { AbonamentoSeed.Seed(this); }
 		}
 
-		public DbSet<Curso> Cursos { get; set; } //
+		public DbSet<Curso> Cursos { get; set; }
 		public DbSet<Docente> Docentes { get; set; }
 		public DbSet<Disciplina> Disciplinas { get; set; }
 		public DbSet<DisciplinaDocente> DisciplinaDocentes { get; set; }
