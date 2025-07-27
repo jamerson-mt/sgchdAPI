@@ -88,6 +88,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddAuthorization(options =>
 {
 	options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin")); // Cria uma política de autorização que requer a role "Admin"
+	options.AddPolicy("ManagerPolicy", policy => policy.RequireRole("Manager")); // Cria uma política de autorização que requer a role "Manager"
 	options.AddPolicy("UserPolicy", policy => policy.RequireRole("User")); // Cria uma política de autorização que requer a role "User"
 	options.AddPolicy(
 		"AuthenticatedUserPolicy",
@@ -172,7 +173,7 @@ using (var scope = app.Services.CreateScope()) //
 
 async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager) //
 {
-	var roles = new[] { "Admin", "User" };
+	var roles = new[] { "Admin", "User", "Manager" };
 	foreach (var role in roles)
 	{
 		if (!await roleManager.RoleExistsAsync(role))
