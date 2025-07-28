@@ -24,7 +24,7 @@ namespace sgchdAPI.Controllers.Auth
 		[HttpPost("register")] // Rota para registrar um novo usuário ( /api/account/register )
 		public async Task<IActionResult> Register([FromBody] RegisterRequest request)
 		{
-			var user = new IdentityUser { UserName = request.Email, Email = request.Email };
+			var user = new IdentityUser { UserName = request.Name, Email = request.Email };
 			var result = await _userManager.CreateAsync(user, request.Password);
 
 			if (result.Succeeded)

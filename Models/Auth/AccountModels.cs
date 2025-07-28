@@ -4,6 +4,7 @@ namespace sgchdAPI.Models.Auth
 	{
 		public required string Email { get; set; }
 		public required string Password { get; set; }
+		public string Name { get; internal set; }
 	}
 
 	public class LoginRequest
