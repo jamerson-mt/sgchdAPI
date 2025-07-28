@@ -24,7 +24,7 @@ namespace sgchdAPI.Controllers.Auth
 		[HttpPost("register")] // Rota para registrar um novo usuário ( /api/account/register )
 		public async Task<IActionResult> Register([FromBody] RegisterRequest request)
 		{
-			var user = new IdentityUser { UserName = request.Name, Email = request.Email };
+			var user = new IdentityUser { UserName = request.Email, Email = request.Email };
 			var result = await _userManager.CreateAsync(user, request.Password);
 
 			if (result.Succeeded)
@@ -38,6 +38,12 @@ namespace sgchdAPI.Controllers.Auth
 		[HttpPost("login")]
 		public async Task<IActionResult> Login([FromBody] LoginRequest request)
 		{
+			var user = await _userManager.FindByEmailAsync(request.Email);
+			if (user == null)
+			{
+				return Unauthorized(new { message = "Usuário não encontrado." });
+			}
+
 			var result = await _signInManager.PasswordSignInAsync(
 				request.Email,
 				request.Password,
