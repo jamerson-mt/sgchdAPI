@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using sgchdAPI.Data;
 using sgchdAPI.Models;
 
@@ -13,10 +14,12 @@ namespace sgchdAPI.Controllers
 		private readonly ApplicationDbContext _context;
 		private readonly string _path;
 
-		public AbonamentoController(ApplicationDbContext context)
+		public AbonamentoController(ApplicationDbContext context, IConfiguration configuration)
 		{
 			_context = context;
-			_path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "upload");
+
+			// Obtenha o caminho do diretório de upload do appsettings.json
+			_path = configuration["FileUpload:UploadPath"] ?? "/home/den/datafiles/upload";
 
 			// Valide se o diretório existe
 			if (!Directory.Exists(_path))

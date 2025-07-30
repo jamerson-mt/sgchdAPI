@@ -108,7 +108,7 @@ builder.Services.AddCors(options =>
 		builder =>
 		{
 			builder
-				.WithOrigins("http://localhost:5173") // Substitua pelo domínio da sua aplicação frontend
+				.WithOrigins("http://workload.cigr.ifpe.edu") // Substitua pelo domínio da sua aplicação frontend
 				.AllowAnyHeader()
 				.AllowAnyMethod()
 				.AllowCredentials(); // Permite envio de cookies e credenciais
