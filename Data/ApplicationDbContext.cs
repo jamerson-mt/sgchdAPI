@@ -12,39 +12,6 @@ namespace sgchdAPI.Data
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) // Injetando as opções de configuração do DbContext
 			: base(options) { }
 
-		// Método dedicado para executar os seeds
-		// como executar os seeds
-		// https://docs.microsoft.com/pt-br/ef/core/managing-schemas/migrations/seeding
-
-
-		public void SeedDatabase()
-		{
-			if (!Cursos.Any())
-			{
-				CursoSeed.Seed(this);
-			}
-
-			if (!Disciplinas.Any())
-			{
-				DisciplinaSeed.Seed(this);
-			}
-
-			if (!Docentes.Any())
-			{
-				DocenteSeed.Seed(this);
-			}
-
-			if (!DocentesElegiveis.Any())
-			{
-				DocenteElegivelSeed.Seed(this);
-			}
-
-			//fazer o seed de roles
-
-			// Adicione verificações semelhantes para outros seeds, se necessário
-			// if (!Abonamentos.Any()) { AbonamentoSeed.Seed(this); }
-		}
-
 		public DbSet<Curso> Cursos { get; set; }
 		public DbSet<Docente> Docentes { get; set; }
 		public DbSet<Disciplina> Disciplinas { get; set; }

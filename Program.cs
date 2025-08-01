@@ -1,36 +1,25 @@
 using System.Security.Claims;
-using DotNetEnv; // Adicione esta linha para usar DotNetEnv
+using DotNetEnv;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using sgchdAPI.Data;
-using sgchdAPI.Services; // Adicione esta linha para importar o RoleSeeder
+using sgchdAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// ---------- CONFIGURAÇÃO DE SERVIÇOS ----------
 
-builder.Services.AddControllers();
-
-// ---------- CONFIGURAÇÃO DO BANCO DE DADOS ----------
 // Carregar variáveis de ambiente do arquivo .env
 Env.Load();
 
-// Configuração do Entity Framework Core com PostgreSQL
-var username = Environment.GetEnvironmentVariable("DB_USERNAME"); // Carregar o nome de usuário da variável de ambiente
-var password = Environment.GetEnvironmentVariable("DB_PASSWORD"); // Carregar a senha da variável de ambiente
+// Configuração do banco de dados
+var username = Environment.GetEnvironmentVariable("DB_USERNAME");
+var password = Environment.GetEnvironmentVariable("DB_PASSWORD");
 
-// Verificar se as variáveis de ambiente estão configuradas
-if (string.IsNullOrEmpty(username))
+if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
 {
 	throw new InvalidOperationException(
-		"A variável de ambiente 'DB_USERNAME' não está configurada."
-	);
-}
-
-if (string.IsNullOrEmpty(password))
-{
-	throw new InvalidOperationException(
-		"A variável de ambiente 'DB_PASSWORD' não está configurada."
+		"As variáveis de ambiente 'DB_USERNAME' e 'DB_PASSWORD' devem estar configuradas."
 	);
 }
 
@@ -38,36 +27,17 @@ var connectionString =
 	builder
 		.Configuration.GetConnectionString("DefaultConnection")
 		?.Replace("{DB_USERNAME}", username)
-		.Replace("{DB_PASSWORD}", password) // Substituir os placeholders na string de conexão
+		.Replace("{DB_PASSWORD}", password)
 	?? throw new InvalidOperationException("Connection string is null.");
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-	options.UseNpgsql(connectionString);
-});
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
-// ---------- CONFIGURAÇÃO DO IDENTITY ----------
-// Configuração do Identity com Entity Framework Core e IdentityUser/IdentityRole
-
+// Configuração do Identity
 builder
-	.Services.AddIdentity<IdentityUser, IdentityRole>() // Configuração do Identity com IdentityUser e IdentityRole
+	.Services.AddIdentity<IdentityUser, IdentityRole>()
 	.AddEntityFrameworkStores<ApplicationDbContext>()
 	.AddDefaultTokenProviders();
 
-// Configuração do Identity para usar cookies de autenticação
-builder
-	.Services.AddAuthentication(options =>
-	{
-		options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme; // Esquema de autenticação padrão, que é o esquema de cookie que faz a autenticação baseada em cookies
-		options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme; // Esquema de desafio padrão, que é o esquema de cookie que faz a autenticação baseada em cookies
-	})
-	.AddCookie(options =>
-	{
-		options.LoginPath = "/auth/login"; // Rota para a página de login
-		options.AccessDeniedPath = "/api/account/access-denied"; // Rota para acesso negado
-	});
-
-// Configuração das opções do Identity
 builder.Services.Configure<IdentityOptions>(options =>
 {
 	options.Password.RequireDigit = true;
@@ -75,28 +45,39 @@ builder.Services.Configure<IdentityOptions>(options =>
 	options.Password.RequireNonAlphanumeric = false;
 	options.Password.RequireUppercase = true;
 	options.Password.RequireLowercase = true;
-	options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role; // Mapeia a claim de role corretamente
+	options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
 });
 
-// Configuração do cookie de autenticação
 builder.Services.ConfigureApplicationCookie(options =>
 {
-	options.LoginPath = "/api/account/try-login"; // Rota para a página de login
-	options.AccessDeniedPath = "/api/account/access-denied"; // Rota para acesso negado,
+	options.LoginPath = "/api/account/try-login";
+	options.AccessDeniedPath = "/api/account/access-denied";
 });
+
+builder
+	.Services.AddAuthentication(options =>
+	{
+		options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+		options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+	})
+	.AddCookie(options =>
+	{
+		options.LoginPath = "/auth/login";
+		options.AccessDeniedPath = "/api/account/access-denied";
+	});
 
 // Configuração de autorização
 builder.Services.AddAuthorization(options =>
 {
-	options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin")); // Cria uma política de autorização que requer a role "Admin"
-	options.AddPolicy("ManagerPolicy", policy => policy.RequireRole("Manager")); // Cria uma política de autorização que requer a role "Manager"
-	options.AddPolicy("UserPolicy", policy => policy.RequireRole("User")); // Cria uma política de autorização que requer a role "User"
+	options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
+	options.AddPolicy("ManagerPolicy", policy => policy.RequireRole("Manager"));
+	// options.AddPolicy("UserPolicy", policy => policy.RequireRole("User"));
 	options.AddPolicy(
 		"AuthenticatedUserPolicy",
 		policy =>
 		{
-			policy.RequireAuthenticatedUser(); // Cria uma política de autorização que requer um usuário autenticado
-			policy.RequireRole("Admin", "User"); // Requer que o usuário tenha a role "Admin" ou "User"
+			policy.RequireAuthenticatedUser();
+			policy.RequireRole("Admin", "Manager");
 		}
 	);
 });
@@ -109,24 +90,25 @@ builder.Services.AddCors(options =>
 		builder =>
 		{
 			builder
-				.WithOrigins("http://workload.cigr.ifpe.edu") // Substitua pelo domínio da sua aplicação frontend
+				.WithOrigins("http://workload.cigr.ifpe.edu")
 				.AllowAnyHeader()
 				.AllowAnyMethod()
-				.AllowCredentials(); // Permite envio de cookies e credenciais
+				.AllowCredentials();
 		}
 	);
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Configuração de Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Removed AddIdentityApiEndpoints as it is not a valid method
-// Identity services are already configured above
+// Adicionar controladores
+builder.Services.AddControllers();
+
+// ---------- CONFIGURAÇÃO DO PIPELINE ----------
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
@@ -134,35 +116,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-// Configuração para servir arquivos estáticos
-app.UseStaticFiles(); //
-
-// Aplicar a política de CORS
+app.UseStaticFiles();
 app.UseCors("AllowSpecificOrigin");
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
-// Executar o seeding do banco de dados e roles
-using (var scope = app.Services.CreateScope())
-{
-	var services = scope.ServiceProvider;
-	try
-	{
-		var context = services.GetRequiredService<ApplicationDbContext>();
-		context.Database.Migrate(); // Aplica as migrações pendentes
-		context.SeedDatabase(); // Executa o seeding do banco de dados
+// EXECUTA O SEEDING DO BANCO DE DADOS
 
-		var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-		await RoleSeeder.SeedRolesAsync(roleManager); // Executa o seeding das roles
-	}
-	catch (Exception ex)
-	{
-		Console.WriteLine($"Erro ao executar o seeding: {ex.Message}");
-	}
-}
+//await DatabaseSeeder.SeedAsync(app.Services);
 
 app.Run();

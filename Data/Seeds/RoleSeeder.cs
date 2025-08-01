@@ -6,7 +6,7 @@ namespace sgchdAPI.Services
 	{
 		public static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
 		{
-			var roles = new[] { "Admin", "User", "Manager" };
+			var roles = new[] { "Admin", "Manager" };
 			foreach (var role in roles)
 			{
 				if (!await roleManager.RoleExistsAsync(role))
