@@ -3,6 +3,7 @@ using DotNetEnv; // Adicione esta linha para usar DotNetEnv
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using sgchdAPI.Data;
+using sgchdAPI.Services; // Adicione esta linha para importar o RoleSeeder
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -145,8 +146,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// // Executar o seeding do banco de dados
-
+// Executar o seeding do banco de dados e roles
 using (var scope = app.Services.CreateScope())
 {
 	var services = scope.ServiceProvider;
@@ -154,32 +154,14 @@ using (var scope = app.Services.CreateScope())
 	{
 		var context = services.GetRequiredService<ApplicationDbContext>();
 		context.Database.Migrate(); // Aplica as migrações pendentes
-		context.SeedDatabase(); // Executa o seeding
+		context.SeedDatabase(); // Executa o seeding do banco de dados
+
+		var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+		await RoleSeeder.SeedRolesAsync(roleManager); // Executa o seeding das roles
 	}
 	catch (Exception ex)
 	{
 		Console.WriteLine($"Erro ao executar o seeding: {ex.Message}");
-	}
-}
-
-// Seed roles into the database
-using (var scope = app.Services.CreateScope()) //
-{
-	var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>(); //
-	await SeedRolesAsync(roleManager); //
-}
-
-// Define the SeedRolesAsync method
-
-async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager) //
-{
-	var roles = new[] { "Admin", "User", "Manager" };
-	foreach (var role in roles)
-	{
-		if (!await roleManager.RoleExistsAsync(role))
-		{
-			await roleManager.CreateAsync(new IdentityRole(role));
-		}
 	}
 }
 
