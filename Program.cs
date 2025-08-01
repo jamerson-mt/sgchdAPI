@@ -3,6 +3,7 @@ using DotNetEnv;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using sgchdAPI.Data;
+using sgchdAPI.Data.Seeds;
 using sgchdAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -90,7 +91,7 @@ builder.Services.AddCors(options =>
 		builder =>
 		{
 			builder
-				.WithOrigins("http://workload.cigr.ifpe.edu")
+				.WithOrigins("http://workload.cigr.ifpe.edu", "http://localhost:5173")
 				.AllowAnyHeader()
 				.AllowAnyMethod()
 				.AllowCredentials();
@@ -124,6 +125,6 @@ app.MapControllers();
 
 // EXECUTA O SEEDING DO BANCO DE DADOS
 
-//await DatabaseSeeder.SeedAsync(app.Services);
+await DatabaseSeeder.SeedAsync(app.Services);
 
 app.Run();

@@ -23,7 +23,7 @@ namespace sgchdAPI.Data.Seeds
 				await RoleSeeder.SeedRolesAsync(roleManager);
 
 				// Executa o seeding do banco de dados
-				//SeedDatabase(context);
+				// SeedDatabase(context);
 			}
 			catch (Exception ex)
 			{
@@ -35,25 +35,25 @@ namespace sgchdAPI.Data.Seeds
 		// Verifica se as tabelas estão vazias e executa o seeding
 		private static void SeedDatabase(ApplicationDbContext context)
 		{
-			if (!context.Cursos.Any())
-			{
-				CursoSeed.Seed(context);
-			}
+			// if (!context.Cursos.Any())
+			// {
+			// 	CursoSeed.Seed(context);
+			// }
 
-			if (!context.Disciplinas.Any())
-			{
-				DisciplinaSeed.Seed(context);
-			}
+			// if (!context.Disciplinas.Any())
+			// {
+			// 	DisciplinaSeed.Seed(context);
+			// }
 
-			if (!context.Docentes.Any())
-			{
-				DocenteSeed.Seed(context);
-			}
+			// if (!context.Docentes.Any())
+			// {
+			// 	DocenteSeed.Seed(context);
+			// }
 
-			if (!context.DocentesElegiveis.Any())
-			{
-				DocenteElegivelSeed.Seed(context);
-			}
+			// if (!context.DocentesElegiveis.Any())
+			// {
+			// 	DocenteElegivelSeed.Seed(context);
+			// }
 
 			// Adicione verificações semelhantes para outros seeds, se necessário
 			// if (!context.Abonamentos.Any()) { AbonamentoSeed.Seed(context); }
