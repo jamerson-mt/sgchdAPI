@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using sgchdAPI.Data.Seeds; // Importação do namespace atual
+using sgchdAPI.Services; // Importação do RoleSeeder
 
 namespace sgchdAPI.Data.Seeds
 {

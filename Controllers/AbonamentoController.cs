@@ -19,7 +19,10 @@ namespace sgchdAPI.Controllers
 			_context = context;
 
 			// Obtenha o caminho do diretório de upload do appsettings.json
-			_path = configuration["FileUpload:UploadPath"] ?? "/home/den/datafiles/upload";
+			var uploadPath = configuration["FileUpload:UploadPath"]; //
+			_path = string.IsNullOrEmpty(uploadPath)
+				? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "upload")
+				: uploadPath;
 
 			// Valide se o diretório existe
 			if (!Directory.Exists(_path))
@@ -197,11 +200,7 @@ namespace sgchdAPI.Controllers
 			}
 
 			// deletar o arquivo PDF associado
-			var filePath = Path.Combine(
-				Directory.GetCurrentDirectory(),
-				"wwwroot",
-				abonamento.UrlPdf ?? string.Empty
-			);
+			var filePath = Path.Combine(_path, abonamento.UrlPdf ?? string.Empty);
 			if (System.IO.File.Exists(filePath))
 			{
 				System.IO.File.Delete(filePath);
