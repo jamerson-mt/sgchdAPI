@@ -6,7 +6,7 @@ using sgchdAPI.Models;
 
 namespace sgchdAPI.Controllers
 {
-	[Authorize]
+	[Authorize(Roles = "Admin")]
 	[ApiController]
 	[Route("api/[controller]")]
 	public class DisciplinaDocenteController(ApplicationDbContext context) : ControllerBase

@@ -34,7 +34,7 @@ namespace sgchdAPI.Controllers
 		[HttpGet]
 		public IActionResult Get()
 		{
-			// retorne a role do usuario
+			// retorne a role do usuari
 			// var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
 			// retorne a role somente
 

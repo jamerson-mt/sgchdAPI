@@ -5,7 +5,7 @@ using sgchdAPI.Models;
 
 namespace sgchdAPI.Controllers
 {
-	[Authorize] // Apenas usuários com as roles ADMIN ou DOCENTE podem acessar este controller
+	[Authorize(Roles = "Admin")] // Apenas usuários com as roles ADMIN ou DOCENTE podem acessar este controller
 	[ApiController]
 	[Route("api/[controller]")]
 	public class DocenteController(ApplicationDbContext context) : ControllerBase
