@@ -73,12 +73,14 @@ builder.Services.AddAuthorization(options =>
 	options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
 	options.AddPolicy("ManagerPolicy", policy => policy.RequireRole("Manager"));
 	// options.AddPolicy("UserPolicy", policy => policy.RequireRole("User"));
+
+	// Exemplo de política personalizada
 	options.AddPolicy(
 		"AuthenticatedUserPolicy",
 		policy =>
 		{
 			policy.RequireAuthenticatedUser();
-			policy.RequireRole("Admin", "Manager");
+			policy.RequireRole("Admin", "Manager"); //
 		}
 	);
 });
@@ -125,6 +127,6 @@ app.MapControllers();
 
 // EXECUTA O SEEDING DO BANCO DE DADOS
 
-await DatabaseSeeder.SeedAsync(app.Services);
+// await DatabaseSeeder.SeedAsync(app.Services);
 
 app.Run();

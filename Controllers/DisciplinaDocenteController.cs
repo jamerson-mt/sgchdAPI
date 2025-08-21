@@ -6,7 +6,7 @@ using sgchdAPI.Models;
 
 namespace sgchdAPI.Controllers
 {
-	[Authorize(Roles = "Admin")]
+	[Authorize(Policy = "AuthenticatedUserPolicy")] // Apenas usuários autenticados podem acessar este endpoint
 	[ApiController]
 	[Route("api/[controller]")]
 	public class DisciplinaDocenteController(ApplicationDbContext context) : ControllerBase

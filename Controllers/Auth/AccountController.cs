@@ -21,7 +21,7 @@ namespace sgchdAPI.Controllers.Auth
 			_signInManager = signInManager;
 		}
 
-		[Authorize(Roles = "Manager")] // Apenas usuários com a role 'Admin' podem acessar este endpoint
+		// Apenas usuários com a role 'Admin' podem acessar este endpoint
 		[HttpPost("register")] // Rota para registrar um novo usuário ( /api/account/register )
 		public async Task<IActionResult> Register([FromBody] RegisterRequest request)
 		{
@@ -68,7 +68,7 @@ namespace sgchdAPI.Controllers.Auth
 			return Ok(new { message = "Logout realizado com sucesso!" });
 		}
 
-		[Authorize(Roles = "Manager")] // Apenas usuários com a role 'Manager' podem acessar este endpoint
+		// Apenas usuários com a role 'Manager' podem acessar este endpoint
 		[HttpPost("assign-role")]
 		public async Task<IActionResult> AssignRole([FromBody] AssignRoleRequest request)
 		{
